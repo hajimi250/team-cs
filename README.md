@@ -24,7 +24,6 @@ GitHub Pages 地址：
 ├─ assets/
 │  └─ images/        图片资源
 ├─ index.html        单页主文件
-├─ deploy.bat        本地一键提交/推送脚本
 └─ README.md
 ```
 
