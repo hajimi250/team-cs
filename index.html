@@ -635,6 +635,10 @@
             height: 100%;
             object-fit: cover;
             border-radius: inherit;
+            will-change: transform;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
         }
 
         .member-persona {
@@ -700,13 +704,17 @@
             border-radius: 14px;
             background: var(--color-primary);
             color: var(--color-on-primary);
-            font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+            font-family: "JetBrains Mono", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             font-size: 0.82rem;
+            font-weight: 500;
             letter-spacing: 0.06em;
             cursor: pointer;
             transform: rotate(-9deg);
             box-shadow: 0 10px 24px rgba(204, 120, 92, 0.22);
             transition: transform var(--transition-default), background var(--transition-default), box-shadow var(--transition-default);
+            will-change: transform;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .rollcall-button:hover,
@@ -782,6 +790,10 @@
             border-radius: 50%;
             margin: 0 auto 12px;
             position: relative;
+            will-change: transform;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
         }
 
         .member-callout {
@@ -1017,6 +1029,27 @@
             color: var(--color-body);
             line-height: 1.55;
             margin-bottom: 12px;
+        }
+
+        .skill-image-container {
+            width: 100%;
+            height: 130px;
+            overflow: hidden;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            background: var(--color-background-soft);
+            border: 1px solid var(--color-hairline);
+        }
+
+        .skill-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s var(--ease-quart);
+        }
+
+        .skill-card:hover .skill-image {
+            transform: scale(1.06);
         }
 
         .skill-list {
@@ -1727,6 +1760,115 @@
                 bottom: 100%;
             }
         }
+
+        /* ========== NEXT-GEN VISUAL EFFECTS (ADAPTED FROM TEST) ========== */
+        /* Active Nav Links styling */
+        .nav-links a.active {
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* Scroll-scrolled header animation */
+        nav {
+            transition: height 0.3s var(--ease-quart), background-color 0.3s var(--ease-quart), box-shadow 0.3s var(--ease-quart);
+        }
+
+        nav.nav-scrolled {
+            height: 56px;
+            box-shadow: 0 10px 30px rgba(20, 20, 19, 0.05);
+            background: rgba(250, 249, 245, 0.96);
+            border-bottom-color: rgba(230, 223, 216, 0.6);
+        }
+
+        /* Dynamic Scroll Progress Bar */
+        #scrollProgress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--gradient-brand);
+            z-index: 9999;
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        /* 3D Tilt Hover Effects for Cards */
+        .project-card,
+        .skill-card,
+        .member-card,
+        .contact-card {
+            transition: border-color var(--transition-default), transform 0.15s ease-out, box-shadow 0.15s ease-out;
+            transform-style: preserve-3d;
+            will-change: transform, box-shadow;
+        }
+
+        .project-card:hover,
+        .skill-card:hover,
+        .member-card:hover,
+        .contact-card:hover {
+            border-color: var(--color-primary);
+            box-shadow: 0 20px 40px rgba(20, 20, 19, 0.06);
+        }
+
+        /* Inner 3D pop effect for card elements */
+        .project-card > *,
+        .skill-card > *,
+        .member-card > *,
+        .contact-card > * {
+            transform: translateZ(25px);
+        }
+
+        /* Smooth tab switching transition */
+        @keyframes tabPanelFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        [role="tabpanel"]:not([hidden]) {
+            display: block;
+            animation: tabPanelFadeIn 0.45s var(--ease-quart) forwards;
+        }
+
+        /* Hover micro-interactions for avatars & brand logos */
+        .member-avatar {
+            transition: transform 0.4s var(--ease-overshoot), box-shadow 0.4s var(--ease-overshoot), border-color 0.4s var(--ease-overshoot);
+            box-shadow: 0 4px 10px rgba(20, 20, 19, 0.08);
+            border: 2px solid var(--color-hairline);
+            pointer-events: none;
+        }
+
+        .member-card:hover .member-avatar {
+            transform: translateY(-6px) scale(1.06) translateZ(0);
+            box-shadow: 0 12px 24px rgba(204, 120, 92, 0.18);
+            border-color: var(--color-primary);
+        }
+
+        .contact-brand {
+            transition: transform 0.4s var(--ease-overshoot), box-shadow 0.4s var(--ease-overshoot);
+            pointer-events: none;
+        }
+
+        .contact-card:hover .contact-brand {
+            transform: perspective(900px) rotate(4deg) rotateY(-10deg) scale(1.08) translateY(-4px);
+            box-shadow: 0 24px 36px rgba(20, 20, 19, 0.22);
+        }
+
+        .contact-links-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-start;
+        }
     </style>
 </head>
 <body>
@@ -1901,8 +2043,11 @@
                 </div>
                 <div class="skills-grid">
                     <article class="skill-card">
+                        <div class="skill-image-container">
+                            <img src="assets/images/frontend_dev.png" alt="前端开发" class="skill-image" loading="lazy">
+                        </div>
                         <h3>前端开发</h3>
-                        <p>从原生 HTML/CSS 页面搭建到 React 组件化工程，覆盖语义化结构、CSS 变量主题、响应式布局、TypeScript 类型系统、Vite 构建与 GitHub Actions 自动部署，具备完整的前端开发与工程化能力。</p>
+                        <p>掌握从原生页面重构到 React 工程化开发的完整能力，熟悉自动化构建与敏捷部署流程。</p>
                         <div class="skill-list">
                             <span class="skill-chip">HTML5 / CSS3</span>
                             <span class="skill-chip">React 19</span>
@@ -1912,8 +2057,11 @@
                         </div>
                     </article>
                     <article class="skill-card">
+                        <div class="skill-image-container">
+                            <img src="assets/images/multimedia_interaction.png" alt="多媒体与实时交互" class="skill-image" loading="lazy">
+                        </div>
                         <h3>多媒体与实时交互</h3>
-                        <p>通过 MediaPipe 实现摄像头手势追踪与实时碰撞检测，使用 Canvas 2D 完成粒子特效、物理模拟与轨迹渲染；通过 Web Audio API 程序化合成音效，无需外部音频资源。</p>
+                        <p>擅长利用 Web 技术实现摄像头手势捕捉、复杂 Canvas 粒子物理模拟及底层音频合成。</p>
                         <div class="skill-list">
                             <span class="skill-chip">MediaPipe</span>
                             <span class="skill-chip">Canvas 2D</span>
@@ -1922,8 +2070,11 @@
                         </div>
                     </article>
                     <article class="skill-card">
+                        <div class="skill-image-container">
+                            <img src="assets/images/ai_git_dev.png" alt="AI 集成与版本管理" class="skill-image" loading="lazy">
+                        </div>
                         <h3>AI 集成与版本管理</h3>
-                        <p>集成 Google Gemini API 实现 AI 生成内容（智能反馈、结构化评定），具备 Prompt 设计与 API 联调经验。所有项目托管于 GitHub，使用 Git 版本管理与 GitHub Pages 部署。</p>
+                        <p>熟悉大语言模型 API 集成，熟练运用 Git/GitHub 进行多分支开发与项目持续集成部署。</p>
                         <div class="skill-list">
                             <span class="skill-chip">Gemini API</span>
                             <span class="skill-chip">Git / GitHub</span>
@@ -1932,8 +2083,11 @@
                         </div>
                     </article>
                     <article class="skill-card">
+                        <div class="skill-image-container">
+                            <img src="assets/images/pygame_dev.png" alt="Python 与 2D 游戏开发" class="skill-image" loading="lazy">
+                        </div>
                         <h3>Python 与 2D 游戏开发</h3>
-                        <p>围绕新增的 Pygame 项目，补充团队在 Python 桌面程序与 2D 游戏方向的实践能力。能够实现角色控制、敌机逻辑、碰撞判定、程序化生成与音效反馈，完成完整可玩的轻量游戏原型。</p>
+                        <p>具备 Pygame 框架下的 2D 游戏开发实力，能快速实现流畅的物理碰撞、音效反馈与关卡逻辑。</p>
                         <div class="skill-list">
                             <span class="skill-chip">Python 3.10+</span>
                             <span class="skill-chip">Pygame 2.x</span>
@@ -2079,7 +2233,10 @@
                         <span class="contact-tag">Email</span>
                         <h3>邮箱联系</h3>
                         <p>合作咨询、项目交流或技术沟通，都可以直接通过邮箱联系团队。</p>
-                        <a class="contact-link" href="mailto:liu250999@gmail.com">liu250999@gmail.com</a>
+                        <div class="contact-links-group">
+                            <a class="contact-link" href="mailto:liu250999@gmail.com">liu250999@gmail.com</a>
+                            <a class="contact-link" href="mailto:yujiann111@gmail.com">yujiann111@gmail.com</a>
+                        </div>
                     </article>
                     <article class="contact-card">
                         <span class="contact-brand" aria-hidden="true">
@@ -2088,7 +2245,10 @@
                         <span class="contact-tag">GitHub</span>
                         <h3>代码仓库</h3>
                         <p>团队公开项目与持续更新的代码作品集中在 GitHub，可直接查看仓库与开发记录。</p>
-                        <a class="contact-link" href="https://github.com/hajimi250" target="_blank" rel="noopener">github.com/hajimi250</a>
+                        <div class="contact-links-group">
+                            <a class="contact-link" href="https://github.com/hajimi250" target="_blank" rel="noopener">github.com/hajimi250</a>
+                            <a class="contact-link" href="https://github.com/ayyj76" target="_blank" rel="noopener">github.com/ayyj76</a>
+                        </div>
                     </article>
                     <article class="contact-card">
                         <span class="contact-brand" aria-hidden="true">
@@ -2165,6 +2325,12 @@
                         scaleCards.forEach(function (card, i) {
                             card.style.animationDelay = (i * 0.1) + "s";
                             card.classList.add("visible");
+                            card.addEventListener("animationend", function handler(e) {
+                                if (e.target !== card) return;
+                                card.classList.remove("scale-in");
+                                card.style.animation = "none";
+                                card.removeEventListener("animationend", handler);
+                            });
                         });
 
                         /* Pop-in cards */
@@ -2172,6 +2338,12 @@
                         popCards.forEach(function (card, i) {
                             card.style.animationDelay = (i * 0.1) + "s";
                             card.classList.add("visible");
+                            card.addEventListener("animationend", function handler(e) {
+                                if (e.target !== card) return;
+                                card.classList.remove("pop-in");
+                                card.style.animation = "none";
+                                card.removeEventListener("animationend", handler);
+                            });
                         });
 
                         /* Number drop for stats */
@@ -2231,20 +2403,127 @@
             }
         })();
 
-        /* ========== PARTICLES ========== */
+        /* ========== PARTICLES (CANVAS CONNECTIVITY SYSTEM) ========== */
         (function () {
             var container = document.getElementById("particles");
-            for (var i = 0; i < 30; i += 1) {
-                var particle = document.createElement("div");
-                particle.className = "particle";
-                particle.style.left = Math.random() * 100 + "%";
-                particle.style.animationDuration = Math.random() * 8 + 6 + "s";
-                particle.style.animationDelay = Math.random() * 10 + "s";
-                var size = Math.random() * 3 + 1;
-                particle.style.width = size + "px";
-                particle.style.height = size + "px";
-                container.appendChild(particle);
+            if (!container) return;
+            container.innerHTML = ""; // Clear existing CSS particles
+            
+            var canvas = document.createElement("canvas");
+            canvas.style.position = "absolute";
+            canvas.style.top = "0";
+            canvas.style.left = "0";
+            canvas.style.width = "100%";
+            canvas.style.height = "100%";
+            canvas.style.display = "block";
+            container.appendChild(canvas);
+            
+            var ctx = canvas.getContext("2d");
+            var particles = [];
+            var particleCount = 45; // density for performance
+            
+            var mouse = {
+                x: null,
+                y: null,
+                radius: 180 // connection radius for mouse
+            };
+            
+            function resize() {
+                canvas.width = container.clientWidth || window.innerWidth;
+                canvas.height = container.clientHeight || window.innerHeight;
             }
+            
+            window.addEventListener("resize", resize);
+            resize();
+            
+            window.addEventListener("mousemove", function (e) {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+            
+            window.addEventListener("mouseleave", function () {
+                mouse.x = null;
+                mouse.y = null;
+            });
+            
+            var Particle = function () {
+                this.reset();
+            };
+            
+            Particle.prototype.reset = function () {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4;
+                this.size = Math.random() * 2 + 1;
+                this.alpha = Math.random() * 0.5 + 0.3;
+            };
+            
+            Particle.prototype.update = function () {
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                    this.reset();
+                }
+            };
+            
+            Particle.prototype.draw = function () {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = "rgba(204, 120, 92, " + this.alpha * 0.25 + ")"; // themed primary color
+                ctx.fill();
+            };
+            
+            for (var i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+            
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw connections between particles
+                ctx.lineWidth = 0.6;
+                for (var i = 0; i < particles.length; i++) {
+                    for (var j = i + 1; j < particles.length; j++) {
+                        var dx = particles[i].x - particles[j].x;
+                        var dy = particles[i].y - particles[j].y;
+                        var dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 120) {
+                            var alpha = (1 - dist / 120) * 0.08;
+                            ctx.strokeStyle = "rgba(204, 120, 92, " + alpha + ")";
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                    
+                    // Connection to mouse
+                    if (mouse.x !== null && mouse.y !== null) {
+                        var mdx = particles[i].x - mouse.x;
+                        var mdy = particles[i].y - mouse.y;
+                        var mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+                        if (mdist < mouse.radius) {
+                            var malpha = (1 - mdist / mouse.radius) * 0.15;
+                            ctx.strokeStyle = "rgba(204, 120, 92, " + malpha + ")";
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(mouse.x, mouse.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                
+                particles.forEach(function (p) {
+                    p.update();
+                    p.draw();
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
         })();
 
         /* ========== COUNTER ANIMATION ========== */
@@ -2303,6 +2582,10 @@
                 event.preventDefault();
                 var target = document.querySelector(anchor.getAttribute("href"));
                 if (target) {
+                    navAnchors.forEach(function (link) {
+                        link.classList.remove("active");
+                    });
+                    anchor.classList.add("active");
                     target.scrollIntoView({ behavior: "smooth", block: "start" });
                 }
                 closeMenu();
@@ -2517,6 +2800,95 @@
 
             updateWeatherFloat();
             window.addEventListener("scroll", updateWeatherFloat, { passive: true });
+        })();
+
+        /* ========== DYNAMIC SCROLL PROGRESS BAR ========== */
+        (function () {
+            var progressBar = document.createElement("div");
+            progressBar.id = "scrollProgress";
+            document.body.appendChild(progressBar);
+        })();
+
+        /* ========== SCROLL SPY & ACTIVE NAV & HEADER EFFECT ========== */
+        (function () {
+            var navLinks = document.querySelectorAll(".nav-links a");
+            var sections = document.querySelectorAll("section[id]");
+            var nav = document.querySelector("nav");
+            var progressBar = document.getElementById("scrollProgress");
+
+            function onScroll() {
+                var scrollPos = window.scrollY || document.documentElement.scrollTop || 0;
+                
+                // Toggle scrolled nav styling
+                if (nav) {
+                    if (scrollPos > 50) {
+                        nav.classList.add("nav-scrolled");
+                    } else {
+                        nav.classList.remove("nav-scrolled");
+                    }
+                }
+
+                // Update scroll progress bar
+                if (progressBar) {
+                    var winHeight = window.innerHeight;
+                    var docHeight = document.documentElement.scrollHeight;
+                    var totalScroll = docHeight - winHeight;
+                    var scrolled = totalScroll > 0 ? (scrollPos / totalScroll) * 100 : 0;
+                    progressBar.style.width = scrolled + "%";
+                }
+
+                // Scrollspy
+                var currentSectionId = "";
+                sections.forEach(function (section) {
+                    var sectionTop = section.offsetTop - 100;
+                    var sectionHeight = section.offsetHeight;
+                    if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                        currentSectionId = section.getAttribute("id");
+                    }
+                });
+
+                if (!currentSectionId && scrollPos < 200) {
+                    currentSectionId = "home";
+                }
+
+                if (currentSectionId) {
+                    navLinks.forEach(function (link) {
+                        if (link.getAttribute("href") === "#" + currentSectionId) {
+                            link.classList.add("active");
+                        } else {
+                            link.classList.remove("active");
+                        }
+                    });
+                }
+            }
+
+            window.addEventListener("scroll", onScroll, { passive: true });
+            window.addEventListener("load", onScroll);
+            onScroll(); // initial run
+        })();
+
+        /* ========== 3D TILT EFFECT FOR CARDS (ADAPTED FROM TEST) ========== */
+        (function () {
+            var cards = document.querySelectorAll(".project-card, .skill-card, .member-card, .contact-card");
+            cards.forEach(function (card) {
+                card.addEventListener("mousemove", function (e) {
+                    var rect = card.getBoundingClientRect();
+                    var x = e.clientX - rect.left;
+                    var y = e.clientY - rect.top;
+
+                    var centerX = rect.width / 2;
+                    var centerY = rect.height / 2;
+
+                    var rotateX = (centerY - y) / 12; // tilt angle X
+                    var rotateY = (x - centerX) / 12; // tilt angle Y
+
+                    card.style.transform = "perspective(1000px) rotateX(" + rotateX.toFixed(2) + "deg) rotateY(" + rotateY.toFixed(2) + "deg) translateY(-6px)";
+                });
+
+                card.addEventListener("mouseleave", function () {
+                    card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)";
+                });
+            });
         })();
     </script>
 </body>
